@@ -1,0 +1,20 @@
+stages:
+  - build
+
+# Настройка условий запуска (только для Merge Requests в main)
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build_job:
+  stage: build
+  image: eclipse-temurin:21-jdk-jammy
+  tags:
+    - saas-linux-small-amd64
+  script:
+    - ./mvnw package -DskipTests || mvn package -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 week
