@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build, Test and SAST
 
 on:
   pull_request:
@@ -27,3 +27,29 @@ jobs:
         with:
           name: built-jar
           path: target/*.jar
+
+  sast:
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: semgrep/semgrep
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        run: semgrep scan --config auto --sarif --output semgrep.sarif
+
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+
+      - name: Upload Semgrep artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-report
+          path: semgrep.sarif
