@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run OWASP Dependency Check
-        run: mvn org.owasp:dependency-check-maven:check -DautoUpdate=false
+        run: mvn org.owasp:dependency-check-maven:check -DnvdApiDelay=3000
 
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
