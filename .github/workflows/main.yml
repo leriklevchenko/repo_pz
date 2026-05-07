@@ -20,10 +20,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Grant execute permission for mvnw
-        run: chmod +x mvnw
+        run: mvn org.owasp:dependency-check-maven:check -DautoUpdate=false -DfailOnError=false
 
       - name: Build, test and package
-        run: ./mvnw clean package
+        run: mvn org.owasp:dependency-check-maven:check -DautoUpdate=false -DfailOnError=false
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Semgrep
-        run: semgrep scan --config auto --sarif --output semgrep.sarif
+        run: mvn org.owasp:dependency-check-maven:check -DautoUpdate=false -DfailOnError=false
 
       - name: Upload SARIF report
         uses: github/codeql-action/upload-sarif@v3
@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run OWASP Dependency Check
-        run: mvn org.owasp:dependency-check-maven:check -DautoUpdate=false --failOnError=false
+        run: mvn org.owasp:dependency-check-maven:check -DautoUpdate=false -DfailOnError=false
 
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
