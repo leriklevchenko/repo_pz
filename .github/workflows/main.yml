@@ -96,7 +96,7 @@ jobs:
       - name: Start application
         run: |
           java -jar target/*.jar &
-          sleep 30
+          sleep 60
 
       - name: Create empty ZAP rules file
         run: touch zap-rules.tsv
@@ -132,7 +132,7 @@ jobs:
       - name: Start application
         run: |
           java -jar target/*.jar &
-          sleep 30
+          sleep 60
 
       - name: Run OWASP ZAP API Scan
         uses: zaproxy/action-api-scan@v0.8.0
