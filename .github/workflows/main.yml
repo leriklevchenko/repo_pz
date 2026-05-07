@@ -82,8 +82,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container:
-      image: maven:3.9.6-eclipse-temurin-21
 
     steps:
       - name: Checkout repository
@@ -120,8 +118,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container:
-      image: maven:3.9.6-eclipse-temurin-21
 
     steps:
       - name: Checkout repository
