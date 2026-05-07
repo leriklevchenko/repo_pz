@@ -39,6 +39,10 @@ jobs:
     container:
       image: semgrep/semgrep
 
+    permissions:
+      security-events: write
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -77,11 +81,11 @@ jobs:
         with:
           name: dependency-check-report
           path: target/dependency-check-report.html
+
   dast-baseline:
     needs: build
 
     runs-on: ubuntu-latest
-
 
     steps:
       - name: Checkout repository
@@ -117,7 +121,6 @@ jobs:
     needs: build
 
     runs-on: ubuntu-latest
-
 
     steps:
       - name: Checkout repository
