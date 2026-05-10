@@ -167,8 +167,9 @@ jobs:
 
       - name: Start application
         run: |
-          java -jar target/*.jar &
-          sleep 120
+          nohup java -jar target/*.jar > app.log 2>&1 &
+          sleep 180
+          cat app.log
 
       - name: Install ffuf
         run: |
