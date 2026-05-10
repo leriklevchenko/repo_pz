@@ -1,42 +1,26 @@
 stages:
+  - scan
   - build
 
-# Настройка условий запуска (только для Merge Requests в main)
-workflow:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+secret_scan:
+  stage: scan
 
-build_job:
-  stage: build
-  image: eclipse-temurin:21-jdk-jammy
-  tags:
-    - saas-linux-small-amd64
+  image:
+    name: zricethezav/gitleaks:latest
+    entrypoint: [""]
+
   script:
-    - ./mvnw package -DskipTests || mvn package -DskipTests
+    - gitleaks detect --source . --verbose
+
+build:
+  stage: build
+
+  image: eclipse-temurin:21
+
+  script:
+    - chmod +x mvnw
+    - ./mvnw clean package
+
   artifacts:
     paths:
       - target/*.jar
-    expire_in: 1 week
-stages:
-  - build
-  - test
-
-variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-
-cache:
-  paths:
-    - .m2/repository
-
-build-job:
-  stage: build
-  image: maven:3.9.6-eclipse-temurin-21
-  script:
-    - mvn clean package
-
-test-job:
-  stage: test
-  image: maven:3.9.6-eclipse-temurin-21
-  script:
-    - mvn test
