@@ -9,7 +9,23 @@ on:
       - main
 
 jobs:
+
+  secret-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
+    needs: secret-scan
     runs-on: ubuntu-latest
 
     container:
@@ -100,7 +116,7 @@ jobs:
       - name: Start application
         run: |
           java -jar target/*.jar &
-          sleep 60
+          sleep 120
 
       - name: Create empty ZAP rules file
         run: touch zap-rules.tsv
@@ -135,7 +151,7 @@ jobs:
       - name: Start application
         run: |
           java -jar target/*.jar &
-          sleep 60
+          sleep 120
 
       - name: Run OWASP ZAP API Scan
         uses: zaproxy/action-api-scan@v0.8.0
