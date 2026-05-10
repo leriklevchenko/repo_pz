@@ -148,3 +148,46 @@ jobs:
         with:
           name: zap-api-report
           path: report_html.html
+
+
+  fuzzing:
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: built-jar
+          path: target
+
+      - name: Start application
+        run: |
+          java -jar target/*.jar &
+          sleep 120
+
+      - name: Install ffuf
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffuf
+
+      - name: Create wordlist
+        run: |
+          echo "admin" > wordlist.txt
+          echo "login" >> wordlist.txt
+          echo "api" >> wordlist.txt
+          echo "test" >> wordlist.txt
+
+      - name: Run ffuf fuzzing
+        run: |
+          ffuf -u http://localhost:8080/FUZZ -w wordlist.txt -mc all -of html -o ffuf-report.html
+
+      - name: Upload ffuf report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ffuf-report
+          path: ffuf-report.html
