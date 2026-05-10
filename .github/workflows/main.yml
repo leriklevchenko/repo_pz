@@ -95,7 +95,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: built-jar
-          path: target
+          path: .
+
+      - name: Show files
+        run: find . -name "*.jar" 
 
       - name: Start application
         run: |
@@ -130,7 +133,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: built-jar
-          path: target
+          path: .
+
+      - name: Show files
+        run: find . -name "*.jar" 
 
       - name: Start application
         run: |
@@ -163,7 +169,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: built-jar
-          path: target
+          path: .
+
+      - name: Show files
+        run: find . -name "*.jar" 
 
       - name: Build Docker image
         run: docker build -t repo_pz:latest .
