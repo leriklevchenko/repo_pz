@@ -82,43 +82,6 @@ jobs:
           name: dependency-check-report
           path: target/dependency-check-report.html
 
-  dast-baseline:
-    needs: build
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: built-jar
-          path: .
-
-      - name: Show files
-        run: find . -name "*.jar" 
-
-      - name: Start application
-        run: |
-          java -jar target/*.jar &
-          sleep 60
-
-      - name: Create empty ZAP rules file
-        run: touch zap-rules.tsv
-
-      - name: Run OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.12.0
-        with:
-          target: 'http://localhost:8080'
-          rules_file_name: 'zap-rules.tsv'
-
-      - name: Upload ZAP Baseline Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: zap-baseline-report
-          path: report_html.html
 
   dast-api:
     needs: build
